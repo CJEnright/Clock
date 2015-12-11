@@ -212,7 +212,7 @@ var hideMenu = function() {
 $("#flipActor").click(function() {
 	$("#clockCanvas").fadeOut(function() {
 		if(currClock==0) {
-			currClock=1;
+			currClock=100;
 			updateTime = 1;
 			$("#flipActor").css("transform", "rotateY(180deg)");
 		} else {
