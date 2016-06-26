@@ -6,41 +6,10 @@ var canv = document.getElementById("clockCanvas"),
 canv.width = $("#canvDiv").width();
 canv.height = $("#canvDiv").height();
 
-var date=new Date(),
-	isMenuHidden = true,
-	currClock = 0,
-	clocks=[drawAnalogClock, drawDigitalClock],
+var date = new Date(),
 	updateTime = 1000;
 
-var clockInterval = setInterval(drawCurrClock, updateTime),
-	hamburgerTimer;
-
-function drawCurrClock() {
-	clocks[currClock]();
-}
-
-/*__                  __             ___      
- /\ \  __          __/\ \__         /\_ \     
- \_\ \/\_\     __ /\_\ \ ,_\    __  \//\ \    
- /'_` \/\ \  /'_ `\/\ \ \ \/  /'__`\  \ \ \   
-/\ \L\ \ \ \/\ \L\ \ \ \ \ \_/\ \L\.\_ \_\ \_ 
-\ \___,_\ \_\ \____ \ \_\ \__\ \__/.\_\/\____\
- \/__,_ /\/_/\/___L\ \/_/\/__/\/__/\/_/\/____/
-               /\____/                        
-               \_/__/                       */
-
-function drawDigitalClock() {
-	clearCanvas();
-	var currTime = new Date(),
-		currTimeString = (currTime.getHours()+11)%12+1 + ":" + currTime.getMinutes() + ":" +currTime.getSeconds() + "." + Math.floor(currTime.getMilliseconds()/100);
-	ctx.fillStyle = "#000";
-	ctx.save();
-	ctx.font = canv.width/10 + "px Arial";
-	ctx.textBaseline = 'middle'; 
-	ctx.textAlign="center";
-	ctx.fillText(currTimeString, canv.width/2, canv.height/2);
-	ctx.restore();
-}
+var clockInterval = setInterval(drawAnalogClock, updateTime);
 
 /*                       ___                       
                         /\_ \                      
@@ -115,7 +84,7 @@ function drawAnalogHours() {
 	ctx.beginPath();
 	ctx.strokeStyle="#000";
 	ctx.rotate(Math.PI);
-	ctx.rotate(30*(hours%12)*Math.PI/180);
+	ctx.rotate(30*(hours%12+date.getMinutes()/60)*Math.PI/180);
 	ctx.moveTo(0,0)
 	ctx.lineTo(0,canv.height/8);
 	ctx.stroke();
@@ -130,7 +99,7 @@ function drawAnalogMins() {
 	ctx.strokeStyle="#000";
 	ctx.lineWidth=canv.height/125;
 	ctx.rotate(Math.PI);
-	ctx.rotate(6*mins*Math.PI/180);
+	ctx.rotate(6*(mins + date.getSeconds()/60)*Math.PI/180);
 	ctx.moveTo(0,0)
 	ctx.lineTo(0,canv.height/7);
 	ctx.stroke();
@@ -171,63 +140,7 @@ function clearCanvas() {
 $(window).resize(function() {
 	canv.width = $("#canvDiv").width();
 	canv.height = $("#canvDiv").height();
-	drawCurrClock();
+	drawAnalogClock();
 });
 
-/*$(window).focus(function() {
-	drawCurrClock();
-	clockInterval = setInterval(drawCurrClock, 1000);
-}).blur(function() {
-	clearInterval(clockInterval);
-});*/
-
-$("body").mousemove(function() {
-	if(hamburgerTimer)
-		clearTimeout(hamburgerTimer)
-	$("#hamburger").show(500);
-	hamburgerTimer = setTimeout(function() {if($("#menu").css("left")==(-canv.width/4).toString()+"px") $("#hamburger").hide(500)}, 1500);
-});
-
-$("#hamburger").click(function() {
-	if(isMenuHidden) 
-		showMenu();
-	else
-		hideMenu();
-});
-
-var showMenu = function() {
-	$("#menu").animate({
-		left: "0%"
-	}, 250);
-	isMenuHidden = false;
-}
-
-var hideMenu = function() {
-	$("#menu").animate({
-		left: "-25%"
-	}, 250);
-	isMenuHidden = true;
-}
-
-$("#flipActor").click(function() {
-	$("#clockCanvas").fadeOut(function() {
-		if(currClock==0) {
-			currClock=1;
-			updateTime = 1;
-			$("#flipActor").css("transform", "rotateY(180deg)");
-		} else {
-			currClock=0;
-			updateTime = 1000;
-			$("#flipActor").css("transform", "rotateY(0deg)");
-		}
-		drawCurrClock();
-		$(this).fadeIn();
-	});
-	clockInterval = setInterval(drawCurrClock, updateTime);
-});
-
-
-
-
-
-drawCurrClock();
+drawAnalogClock();
