@@ -1,5 +1,3 @@
-//cj made thiss
-
 var canv = document.getElementById("clockCanvas"),
 	ctx = canv.getContext("2d");
 

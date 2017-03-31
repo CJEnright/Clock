@@ -1,6 +1,4 @@
 # Clock
-this is a clock
-and thats about it  
-LOOK AT IT: http://cjenright.github.io/Clock/
-# License
-I don't know, do whatever I guess
+this is a clock just to play around with canvas  
+and thats about it.  
+you can see it here: http://cjenright.github.io/Clock/
